@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Sound from 'react-native-sound';
 import {_storeData,updateData} from './LeaderBoard.js';
 
+//style 
 const { sounds } = require('./sound.js');
 const { width, height} = Dimensions.get('window');
 const CELL_SIZE = Math.floor(width * .4); 
@@ -16,7 +17,7 @@ const StartButton = ({ onPress, title }) => (
   </TouchableOpacity>
 );
 
-let Colors = ["#64D23B", "#D93333", "#FED731", "#3275DD", "white"];
+let Colors = ["#32CD32", "red", "#fdff00", "blue", "white"];
 let gameSequence = [];
 let userSequence = [];
 let gameOver = true;
@@ -40,12 +41,12 @@ static defaultProps = {
                     <Text style={styles.textBox}> Score: {this.state.score}</Text>
                 <View>
                     <View style={styles.gameBox}>
-                       {this.renderTiles(0)}
-                       {this.renderTiles(1)} 
+                        {this.renderTiles(0)}
+                        {this.renderTiles(1)} 
                     </View>
                     <View style={styles.gameBox}>
-                       {this.renderTiles(2)} 
-                       {this.renderTiles(3)}  
+                        {this.renderTiles(2)} 
+                        {this.renderTiles(3)}  
                     </View>
                 </View >
                 <StartButton title="PLAY!" onPress={()=>this.resetTheGame()}/>
@@ -54,39 +55,39 @@ static defaultProps = {
     }
 
     //display tiles and their colors
-	renderTiles(i) {
+    renderTiles(i) {
         let id= i+1;
-		let color = {backgroundColor: Colors[i]}
-		let litColor = {backgroundColor: Colors[4]}
-		return (
+        let color = {backgroundColor: Colors[i]}
+        let litColor = {backgroundColor: Colors[4]}
+        return (
             <TouchableOpacity onPress={()=> this.play(id)}>
                 <View style={[styles.tile, this.state.flashIndex == id ? litColor : color]}/>
             </TouchableOpacity>
         )		
-	}
+    }
 
     playSound(i){
-		console.log(gameSequence);
-		if(gameOver == false){
-		sounds[i-1].play((success) => {
-		if (success) {
-			console.log('successfully finished playing');
-		} else {
-			console.log('playback failed due to audio decoding errors');
-		}
-		});
-		}
-	}
+        console.log(gameSequence);
+        if(gameOver == false){
+        sounds[i-1].play((success) => {
+        if (success) {
+            console.log('successfully finished playing');
+        } else {
+            console.log('playback failed due to audio decoding errors');
+        }
+        });
+        }
+    }
 
     //reset the game
     resetTheGame() {
-		console.log("---------------------------------------------");
-		this.setState({score: this.props.score});
+        console.log("---------------------------------------------");
+        this.setState({score: this.props.score});
         gameSequence = [];
-		userSequence = [];
-		gameOver = false;
+        userSequence = [];
+        gameOver = false;
         this.setState({flashIndex: 0});
-		this.setState({score: 0});
+        this.setState({score: 0});
         let startColor = random(1, 4);
         gameSequence.push(startColor);
         this.playColor(gameSequence);
@@ -94,8 +95,8 @@ static defaultProps = {
 
     //play and update data eith the new score
     play(id) {
-		console.log("play");
-		this.playSound(id);
+        console.log("play");
+        this.playSound(id);
         userSequence.push(id);
         for(i=0; i<userSequence.length; i++){
             if(userSequence[i] != gameSequence[i]){
@@ -104,7 +105,7 @@ static defaultProps = {
             }
         }
         if (gameOver == false && (userSequence.length == gameSequence.length)){
-			this.setState({score: this.state.score + 1});
+            this.setState({score: this.state.score + 1});
             userSequence = [];
             gameSequence.push(random(1, 4));
             this.playColor(gameSequence);
@@ -184,7 +185,8 @@ const styles = StyleSheet.create({
 		color: "#fff",
 		fontWeight: "bold",
 		alignSelf: "center",
-  }
+  },
+  
 });
 
 export default Game

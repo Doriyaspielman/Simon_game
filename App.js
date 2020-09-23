@@ -4,25 +4,22 @@ import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Game from './src/components/Game'
 import LeaderBoard from './src/components/LeaderBoard'
-import { createStore } from 'redux'
-import { Provider } from 'react-redux'
-import {getData} from './src/components/LeaderBoard';
 
 
 function GameScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button
-        title="Go to Leader board"
+        title="Leader board"
         onPress={() => {
           navigation.navigate('leaderBoard')
         }}
+        color="#4682B4"
       />
       <Game/>
     </View>
   );
 }
-
 
 function ScoresScreen({ navigation }) {
   return (
@@ -30,6 +27,7 @@ function ScoresScreen({ navigation }) {
       <Button
         title="Go back to the game!"
         onPress={() => navigation.navigate('Simon')}
+        color="#4682B4"
       />
       <LeaderBoard/>
     </View>
