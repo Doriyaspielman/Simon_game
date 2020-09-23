@@ -2,12 +2,9 @@ import  React, {Component}  from  'react' ;
 import  {  StyleSheet ,  Text ,  View ,  TouchableOpacity ,  Alert ,  Button, Dimensions}  from  'react-native' ;
 import { connect } from 'react-redux'
 import Sound from 'react-native-sound';
-import s1 from '../audio/simonSound1.mp3'
-import s2 from '../audio/simonSound2.mp3'
-import s3 from '../audio/simonSound3.mp3'
-import s4 from '../audio/simonSound4.mp3'
 import {_storeData,updateData} from './LeaderBoard.js';
 
+const { sounds } = require('./sound.js');
 const { width, height} = Dimensions.get('window');
 const CELL_SIZE = Math.floor(width * .4); 
 const CELL_PADDING = Math.floor(CELL_SIZE * .08);
@@ -19,20 +16,12 @@ const StartButton = ({ onPress, title }) => (
   </TouchableOpacity>
 );
 
-let sound1 = new Sound(s1, Sound.MAIN_BUNDLE);
-let sound2 = new Sound(s2, Sound.MAIN_BUNDLE);
-let sound3 = new Sound(s3, Sound.MAIN_BUNDLE);
-let sound4 = new Sound(s4, Sound.MAIN_BUNDLE);
-
 let Colors = ["#64D23B", "#D93333", "#FED731", "#3275DD", "white"];
-let sounds = [sound1, sound2, sound3, sound4]
 let gameSequence = [];
 let userSequence = [];
 let gameOver = true;
-//get a random number from a given range 
-function random(min, max){
-    return  (min + Math.floor(Math.random() * (max + 1 - min)));
-}
+
+
 
 class Game extends React.Component {
 static defaultProps = {
@@ -64,21 +53,22 @@ static defaultProps = {
         );
     }
 
+    //display tiles and their colors
 	renderTiles(i) {
         let id= i+1;
 		let color = {backgroundColor: Colors[i]}
 		let litColor = {backgroundColor: Colors[4]}
 		return (
-            <TouchableOpacity onPress={()=> this.playTheGame(id)}>
+            <TouchableOpacity onPress={()=> this.play(id)}>
                 <View style={[styles.tile, this.state.flashIndex == id ? litColor : color]}/>
             </TouchableOpacity>
         )		
 	}
 
-    playSound(l){
+    playSound(i){
 		console.log(gameSequence);
 		if(gameOver == false){
-		sounds[l-1].play((success) => {
+		sounds[i-1].play((success) => {
 		if (success) {
 			console.log('successfully finished playing');
 		} else {
@@ -88,6 +78,7 @@ static defaultProps = {
 		}
 	}
 
+    //reset the game
     resetTheGame() {
 		console.log("---------------------------------------------");
 		this.setState({score: this.props.score});
@@ -101,20 +92,15 @@ static defaultProps = {
         this.playColor(gameSequence);
     }
 
-    playTheGame(id) {
-        // gameOver =false;
-		console.log("playTheGame");
+    //play and update data eith the new score
+    play(id) {
+		console.log("play");
 		this.playSound(id);
         userSequence.push(id);
         for(i=0; i<userSequence.length; i++){
             if(userSequence[i] != gameSequence[i]){
                 gameOver = true;
-                if(this.state.score > 0){
-                _storeData(this.state.score);
-                }
-                this.setState({flashIndex: 0});
-                Alert.alert("Try Again!")
-                updateData();
+                this.addAndUpdate();
             }
         }
         if (gameOver == false && (userSequence.length == gameSequence.length)){
@@ -124,7 +110,8 @@ static defaultProps = {
             this.playColor(gameSequence);
         }
     }
-    
+
+    //play the sound and change the color to white when pressed    
     playColor(sequence) {
         var i = 0;
         this.intervalId = setInterval(() => {
@@ -138,6 +125,21 @@ static defaultProps = {
             }
         }, 800);
     }
+
+    //add and update the data
+    addAndUpdate(){
+        if(this.state.score > 0){
+            _storeData(this.state.score);
+        }
+        this.setState({flashIndex: 0});
+        Alert.alert("Try Again!")
+        updateData();        
+    }
+}
+
+//get a random number from a given range 
+function random(min, max){
+    return  (min + Math.floor(Math.random() * (max + 1 - min)));
 }
 
 

@@ -10,7 +10,7 @@ export default class LeaderBoard extends React.Component{
         <View style={styles.container}>
           <Text style={styles.TextStyle}> LeaderBoard:  </Text>
             {scores.map((item, key)=>(
-            <Text View style={styles.textBox} key={key}>{item[1]}</Text>
+            <Text View style={styles.textBox} key={key}>1. {item[1]}</Text>
             ))}
           </View>
               );
