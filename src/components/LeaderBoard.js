@@ -24,7 +24,6 @@ export default class LeaderBoard extends React.Component{
 export async function updateData(){
     await _retrieveData();
     await sortScore(scores);
-    console.log("updateData:"+ scores);
 }
 
 export async function _retrieveData() {

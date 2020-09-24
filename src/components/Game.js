@@ -81,7 +81,6 @@ static defaultProps = {
 
     //reset the game
     resetTheGame() {
-        console.log("---------------------------------------------");
         this.setState({score: this.props.score});
         gameSequence = [];
         userSequence = [];
@@ -95,7 +94,6 @@ static defaultProps = {
 
     //play and update data eith the new score
     play(id) {
-        console.log("play");
         this.playSound(id);
         userSequence.push(id);
         for(i=0; i<userSequence.length; i++){
