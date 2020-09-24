@@ -21,6 +21,8 @@ let Colors = ["#32CD32", "red", "#fdff00", "blue", "white"];
 let gameSequence = [];
 let userSequence = [];
 let gameOver = true;
+let canPlay = true; // user can play or not 
+
 
 class Game extends React.Component {
 static defaultProps = {
@@ -47,7 +49,8 @@ static defaultProps = {
                         {this.renderTiles(3)}  
                     </View>
                 </View >
-                <StartButton title="PLAY!" onPress={()=>this.resetTheGame()}/>
+                <StartButton title="PLAY!" onPress={()=> (canPlay == true ? this.resetTheGame() : console.log("no"))}/>
+                <StartButton title="STOP" onPress={()=> this.stopTheGame()}/>
             </View>
         );
     }
@@ -58,7 +61,7 @@ static defaultProps = {
         let color = {backgroundColor: Colors[i]}
         let flash = {backgroundColor: Colors[4]}
         return (
-            <TouchableOpacity onPress={()=> this.play(id)}>
+            <TouchableOpacity onPress={()=> (canPlay == true ? this.play(id) : console.log("no"))}>
                 <View style={[styles.tile, this.state.flashIndex == id ? flash : color]}/>
             </TouchableOpacity>
         )		
@@ -108,13 +111,16 @@ static defaultProps = {
             userSequence = [];
             gameSequence.push(random(1, 4));
             this.playColor(gameSequence);
+            
         }
     }
 
     //play the sound and and make "flash" when pressed    
     playColor(sequence) {
+        
         var i = 0;
         this.intervalId = setInterval(() => {
+            canPlay = false;
             this.playSound(sequence[i]);
             this.setState({flashIndex: sequence[i]});
             setTimeout(() => this.setState({flashIndex: 0}), 300);
@@ -122,8 +128,16 @@ static defaultProps = {
             if (i >= sequence.length) {
                 clearInterval(this.intervalId);
                 setTimeout(() => this.setState({flashIndex: 0}), 300);
+                canPlay = true;
+
             }
         }, 800);
+    }
+
+    //stop the game and save the score
+    stopTheGame(){
+        this.addAndUpdate();
+        gameOver = true;
     }
 
     //add and update the data
