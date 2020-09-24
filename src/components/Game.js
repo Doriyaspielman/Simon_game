@@ -22,8 +22,6 @@ let gameSequence = [];
 let userSequence = [];
 let gameOver = true;
 
-
-
 class Game extends React.Component {
 static defaultProps = {
   score: 0
@@ -58,16 +56,15 @@ static defaultProps = {
     renderTiles(i) {
         let id= i+1;
         let color = {backgroundColor: Colors[i]}
-        let litColor = {backgroundColor: Colors[4]}
+        let flash = {backgroundColor: Colors[4]}
         return (
             <TouchableOpacity onPress={()=> this.play(id)}>
-                <View style={[styles.tile, this.state.flashIndex == id ? litColor : color]}/>
+                <View style={[styles.tile, this.state.flashIndex == id ? flash : color]}/>
             </TouchableOpacity>
         )		
     }
 
     playSound(i){
-        console.log(gameSequence);
         if(gameOver == false){
         sounds[i-1].play((success) => {
         if (success) {
@@ -101,6 +98,8 @@ static defaultProps = {
         for(i=0; i<userSequence.length; i++){
             if(userSequence[i] != gameSequence[i]){
                 gameOver = true;
+                this.setState({flashIndex: 0});
+                Alert.alert("Try Again!")
                 this.addAndUpdate();
             }
         }
@@ -112,7 +111,7 @@ static defaultProps = {
         }
     }
 
-    //play the sound and change the color to white when pressed    
+    //play the sound and and make "flash" when pressed    
     playColor(sequence) {
         var i = 0;
         this.intervalId = setInterval(() => {
@@ -132,8 +131,6 @@ static defaultProps = {
         if(this.state.score > 0){
             _storeData(this.state.score);
         }
-        this.setState({flashIndex: 0});
-        Alert.alert("Try Again!")
         updateData();        
     }
 }

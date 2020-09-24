@@ -24,7 +24,7 @@ export default class LeaderBoard extends React.Component{
 export async function updateData(){
     await _retrieveData();
     await sortScore(scores);
-    console.log("get data");
+    console.log("updateData:"+ scores);
 }
 
 export async function _retrieveData() {
@@ -41,7 +41,6 @@ export async function _retrieveData() {
 
 //get the latest score and update the data
 export async function _storeData(s) {
-    await updateData();
     let score = s.toString();
     let min = 0;
   try {
@@ -58,6 +57,7 @@ export async function _storeData(s) {
   } catch (error) {
     console.log("Error saving data"); 
   }
+  await updateData();
 }
 
 //find the min score to replace
